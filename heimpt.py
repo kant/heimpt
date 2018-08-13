@@ -10,7 +10,7 @@ generate the output.
 
 Usage:
     heimpt.py <config_file> [options]
-    heimpt.py import omp [-t <template_file>] (<submission_id> ... | -a)
+    heimpt.py import omp [-t <template_file>] (<submission_id> ... | -all)
 
 General Options:
     --interactive      Enable step-by-step interactive mode
@@ -19,7 +19,7 @@ General Options:
 
 import omp Options:
     -t --template=<template_file>
-    -a --all-submissions          Import all submissions of any configured presses
+    -all --all-submissions          Import all submissions of any configured presses
 
 Example
 --------
@@ -65,9 +65,9 @@ import inspect
 SEP = os.path.sep
 
 
-class MPT(Debuggable):
+class heimMPT(Debuggable):
     """
-    MPT Class Object,  which initializes the properties and defines the methods.
+    heimMPT Class Object,  which initializes the properties and defines the methods.
 
     """
 
@@ -103,7 +103,7 @@ class MPT(Debuggable):
 
     def run(self):
         """
-        Runs the MPT  Module, which typesets all the projects defined in the json input file
+        Runs the heimMPT  Module, which typesets all the projects defined in the json input file
 
         Returns
         --------
@@ -714,7 +714,7 @@ class MPT(Debuggable):
 
     def run_modules(self):
         """
-        Run MPT in module mode
+        Run heimMPT in module mode
 
         """
         # Run import modules
@@ -780,7 +780,7 @@ def main():
     run
 
     """
-    pi = MPT()
+    pi = heimMPT()
     if pi.args['import']:
         pi.run_modules()
 
