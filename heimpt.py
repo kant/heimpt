@@ -205,8 +205,10 @@ class heimMPT(Debuggable):
         """
 
         args = []
+        if t_props.get('language'):
+            args.append(t_props.get('language'))
         if t_props.get('executable'):
-            args = [t_props.get('executable')]
+            args.append(t_props.get('executable'))
         else:
             self.debug.print_debug(
                 self, self.gv.TYPESETTER_EXECUTABLE_VARIABLE_IS_UNDEFINED)
@@ -619,11 +621,11 @@ class heimMPT(Debuggable):
         p_name = p.get('typesetters')[p_id].get("name")
 
         t_path = [p.get('path'), uid]
-        if args:
-            if 'metypeset/bin/metypeset.py' in args[0].lower():
-                t_path += ['nlm']
-        else:
-            t_path += [p.get('path'), uid]
+        for arg in args:
+            if 'metypeset/bin/metypeset.py' in arg.lower():
+                t_path.append('nlm')
+
+        self.debug.print_console(self, '{} '.format(SEP.join(t_path)))
 
         out_type = p['typesetters'][p_id].get('out_type')
 
@@ -645,13 +647,16 @@ class heimMPT(Debuggable):
                 p_path = self.gv.create_dirs_recursive(project_path)
                 f_path = '{}{}{}'.format(p_path, SEP, filename)
                 os.rename(os.path.join(temp_dir, filename), f_path)
-            shutil.rmtree(temp_dir)
+            #shutil.rmtree(temp_dir)
         elif p['typesetters'][p_id].get('process'):
             t_path.append(prefix + '.' + out_type)
             p_path = self.gv.create_dirs_recursive(project_path)
             f_path = '{}{}{}.{}'.format(p_path, SEP, prefix, out_type)
-            os.rename(SEP.join(t_path), f_path)
-            shutil.rmtree(temp_dir)
+            if not os.path.isfile(SEP.join(t_path)):
+                self.debug.print_console( self,'{} {}'.format(self.gv.PROJECT_INPUT_FILE_DOES_NOT_EXIST,SEP.join(t_path)))
+            else:
+                os.rename(SEP.join(t_path), f_path)
+                shutil.rmtree(temp_dir)
         else:
             self.debug.print_debug(
                 self, self.gv.PROJECT_TYPESETTER_PROCESS_METHOD_NOT_SPECIFIED)
@@ -685,9 +690,6 @@ class heimMPT(Debuggable):
         """
         t_path.append(self.gv.uuid)
         p_path = self.gv.create_dirs_recursive(project_path)
-
-        print((t_path, p_path))
-
         f_path = '{}{}{}.xml'.format(p_path, SEP, self.gv.uuid)
         shutil.copy2(SEP.join(t_path), f_path)
         self.create_named_file(p, p_id, p_path, t_path)
