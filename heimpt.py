@@ -144,7 +144,7 @@ class heimMPT(Debuggable):
         name = 'heiMPT'
         return name
 
-    def call_typesetter(self, args):
+    def run_single_program(self, args):
         """Runs  typesetter with given arguments
 
         Creates the execution path for a typesetter or an application and runs it  as a system process. Output,
@@ -186,7 +186,7 @@ class heimMPT(Debuggable):
         exit_code = process.wait()
         return output, err, exit_code
 
-    def arguments_parse(self, t_props):
+    def parse_arguments(self, t_props):
         """
         Reads typesetter properties from json  configuration and create  arguments.
 
@@ -278,7 +278,7 @@ class heimMPT(Debuggable):
             self, '{} {}'.format('Execute', ' '.join(args)))
         return True
 
-    def run_typesetter(
+    def run_project_step(
             self,
             p,
             pre_path,
@@ -289,7 +289,7 @@ class heimMPT(Debuggable):
             f_name,
             args):
         """
-        Creates the temporary output path, calls the typesetter and writes the outtput to the correct path for a
+        Creates the temporary output path, calls the typesetter and writes the output to the correct path for a
         certain file
 
         Parameters
@@ -321,7 +321,7 @@ class heimMPT(Debuggable):
         See Also
         --------
 
-        call_typesetter, organize_output
+        run_single_program, organize_output
 
         """
 
@@ -339,7 +339,7 @@ class heimMPT(Debuggable):
             self.gv.log.append(prefix)
             args.append(f_path)
             self.create_output_path(p, p_id,  args, prefix, uid)
-            output, err, exit_code = self.call_typesetter(args)
+            output, err, exit_code = self.run_single_program(args)
             self.debug.print_debug(self, output.decode('utf-8'))
             p_path = self.organize_output(
                 p,
@@ -358,7 +358,7 @@ class heimMPT(Debuggable):
 
         return p_path, pf_type
 
-    def typeset_file(
+    def typeset_single_file(
             self,
             p,
             pre_path,
@@ -400,7 +400,7 @@ class heimMPT(Debuggable):
 
         See Also
         --------
-        run_typesetter
+        run_project_step
 
         """
         t_props = self.all_typesetters.get(
@@ -408,9 +408,9 @@ class heimMPT(Debuggable):
         p_path, pf_type = '', ''
 
         if t_props:
-            mt = self.arguments_parse(t_props)
+            mt = self.parse_arguments(t_props)
             if self.gv.check_program(t_props.get('executable')):
-                p_path, pf_type = self.run_typesetter(
+                p_path, pf_type = self.run_project_step(
                     p,
                     pre_path,
                     pre_out_type,
@@ -428,7 +428,7 @@ class heimMPT(Debuggable):
                 self, self.gv.PROJECT_TYPESETTER_IS_NOT_AVAILABLE)
         return p_path, pf_type
 
-    def typeset_files(
+    def typeset_all_files(
             self,
             p,
             pre_path,
@@ -458,7 +458,7 @@ class heimMPT(Debuggable):
 
         See Also
         --------
-        typeset_file
+        typeset_single_file
 
         """
         p_path, pf_type = '', ''
@@ -469,7 +469,7 @@ class heimMPT(Debuggable):
             sorted((int(key), value) for key, value in list(p.get('files').items())))
         if p.get('typesetters')[pre_id].get("expand"):
             f_name = self.gv.uuid
-            p_path, pf_type = self.typeset_file(
+            p_path, pf_type = self.typeset_single_file(
                 p,
                 pre_path,
                 pre_out_type,
@@ -482,7 +482,7 @@ class heimMPT(Debuggable):
         else:
             for f_id in project_files:
                 f_name = project_files[f_id]
-                p_path, pf_type = self.typeset_file(
+                p_path, pf_type = self.typeset_single_file(
                     p,
                     pre_path,
                     pre_out_type,
@@ -494,7 +494,7 @@ class heimMPT(Debuggable):
 
         return p_path, pf_type
 
-    def typeset_project(self, p):
+    def typeset_single_project(self, p):
         """
         Typesets a certain project
 
@@ -511,7 +511,7 @@ class heimMPT(Debuggable):
 
         See Also
         --------
-        typeset_files
+        typeset_all_files
 
         """
         typesetters_ordered, temp_path, temp_pre_out_type = '', '', ''
@@ -538,7 +538,7 @@ class heimMPT(Debuggable):
                 self.debug.print_console(self, ' '.join(
                     ['Step', p_id, ':', '\t', p.get('typesetters')[p_id].get("name")]))
                 self.gv.log.append('{} {}'.format(p_id,  p.get('typesetters')[p_id].get("name")))
-                temp_path, temp_pre_out_type = self.typeset_files(
+                temp_path, temp_pre_out_type = self.typeset_all_files(
                     p,
                     pre_path,
                     prev_out_type,
@@ -565,13 +565,13 @@ class heimMPT(Debuggable):
 
         See Also
         --------
-        typeset_project
+        typeset_single_project
 
         """
         projects = self.config.get('projects')
         if projects:
             for p in projects:
-                self.typeset_project(p)
+                self.typeset_single_project(p)
 
         else:
             self.debug.print_debug(self, self.gv.PROJECTS_VAR_IS_NOT_SPECIFIED)
@@ -749,7 +749,7 @@ class heimMPT(Debuggable):
             self.debug.fatal_error(self, "Unsupported arguments: " + self.args)
         return
 
-    def check_applications(self):
+    def check_apppplication_status(self):
         """
         Check if program binaries are available 
 
@@ -789,7 +789,7 @@ def main():
     else:
         pi.config = pi.gv.read_json(pi.args['<config_file>'])
         pi.all_typesetters = pi.config.get('typesetters')
-        #pi.check_applications()
+        #pi.check_apppplication_status()
         pi.run()
 
 
