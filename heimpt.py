@@ -101,22 +101,6 @@ class heimMPT(Debuggable):
         opts = ('Confirm', 'Unconfirm')
         sel = prompt.input_options(opts)
 
-    def run(self):
-        """
-        Runs the heimMPT  Module, which typesets all the projects defined in the json input file
-
-        Returns
-        --------
-        True: boolean
-            Returns True if all the projects are typeset
-
-        See Also
-        --------
-        typeset_all_projects
-
-        """
-        self.typeset_all_projects()
-        return True
 
     @staticmethod
     def read_command_line():
@@ -790,7 +774,7 @@ def main():
         pi.config = pi.gv.read_json(pi.args['<config_file>'])
         pi.all_typesetters = pi.config.get('typesetters')
         #pi.check_apppplication_status()
-        pi.run()
+        pi.typeset_all_projects()
 
 
 if __name__ == '__main__':
