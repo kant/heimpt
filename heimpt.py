@@ -262,7 +262,7 @@ class heimMPT(Debuggable):
             self, '{} {}'.format('Execute', ' '.join(args)))
         return True
 
-    def run_project_step(
+    def run_single_step(
             self,
             p,
             pre_path,
@@ -384,7 +384,7 @@ class heimMPT(Debuggable):
 
         See Also
         --------
-        run_project_step
+        run_single_step
 
         """
         t_props = self.all_typesetters.get(
@@ -394,7 +394,7 @@ class heimMPT(Debuggable):
         if t_props:
             mt = self.parse_arguments(t_props)
             if self.gv.check_program(t_props.get('executable')):
-                p_path, pf_type = self.run_project_step(
+                p_path, pf_type = self.run_single_step(
                     p,
                     pre_path,
                     pre_out_type,
