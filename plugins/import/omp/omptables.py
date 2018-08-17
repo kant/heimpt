@@ -305,7 +305,7 @@ def define_tables(db):
                     Field('viewable', 'integer'),
                     Field('date_uploaded', 'datetime'),
                     Field('date_modified', 'datetime'),
-                    Field('user_group_id', 'integer'),
+                    #Field('user_group_id', 'integer'),
                     Field('uploader_user_id', 'integer'),
                     Field('assoc_type', 'integer'),
                     Field('assoc_id', 'integer'),
