@@ -3,7 +3,7 @@
 """
 This  program is a utility file to merge a JATS/BITS XML  section into a BIS-XML files
 
-The current functions are limited to JATS and BITS XML Scheme of the Library of Congress. However the methods defined in
+The current functions are limited to JATS and BITS XML Scheme of the Library of Congress However the methods defined in
 this program can be used to modify any element tree.
 
 
@@ -37,10 +37,10 @@ PYTHON_IMPORT_FAILED_LXML_MODULE = 'Failed to import python lxml module'
 import os
 import sys
 import uuid
-from .debug import Debuggable, Debug
-from .docopt import docopt
-from .globals import GV
-from .settingsconfiguration import Settings
+from debug import Debuggable, Debug
+from docopt import docopt
+from globals import GV
+from settingsconfiguration import Settings
 
 try:
     from lxml import etree
@@ -96,6 +96,7 @@ class Merge(Debuggable):
 
         """
         fuf = os.path.join(self.dr, self.gv.uuid)
+        print('full file',fuf)
         pt = os.path.join(self.dr, os.path.basename(self.gv.uuid))
 
         trf = None

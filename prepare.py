@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 """This  program is a utility file  which executes a set of specified functions on a element tree  of a xml file.
 
-The current functions are limited to JATS and BITS XML Scheme of the Library of Congress. However the methods defined in
-this program can be used to modify any element tree. Some of the  current available functions are sorting footnotes,
-numbering elements of a certain type  or setting unique ids to a certain element types.
+The current functions are limited to JATS and BITS XML Scheme of the Library of Congress. However the methods defined
+inthis program can be used to modify any element tree.
 
 Usage:
-    prepare.py  <input_file>  <path> [options]
+    prepare.py <input_file> <path> [options]
+    prepare.py -h --help
+
 Options:
     -c --citations-to-references
     -d --debug   Enable debug output
@@ -20,11 +21,6 @@ Options:
     -t --stand-alone
     -u --set-uuids=<element types as comma seperated list>
     -v --set-numbering-values=<numbering values, additionaly roman numbers e.g.xref,ref-type,fn,{1:2} >
-
-
-
-All the  are done  in the global element tree for performance reasons.
-
 
 References
 ----------
@@ -43,10 +39,10 @@ PYTHON_IMPORT_FAILED_LXML_MODULE = 'Failed to import python lxml module'
 import os
 import sys
 import uuid
-from .debug import Debuggable, Debug
-from .docopt import docopt
-from .globals import GV
-from .settingsconfiguration import Settings
+from debug import Debuggable, Debug
+from docopt import docopt
+from globals import GV
+from settingsconfiguration import Settings
 
 
 try:
@@ -208,7 +204,7 @@ class Prepare(Debuggable):
             fns = self.tr.getroot().findall(
                 ''.join(['.//xref/[@ref-type="', ref_type, '"]']))
             for i in fns:
-                rid = ''.join(['bibd', uuid.uuid4().get_hex()])
+                rid = ''.join(['bibd', uuid.uuid4().hex])
                 f[i.attrib['rid']] = rid
                 i.set('rid', rid)
             for m in list(f.keys()):

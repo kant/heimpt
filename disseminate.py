@@ -6,6 +6,7 @@ Reads a xml file , transforms it to a intermediate format (e.g. formatting objec
 
 Usage:
     disseminate.py  <input_file>  <path>  --out-type=<FO_PDF> [options]
+
 Options:
     -d, --debug  Enable debug output
     -f --formatter=<electronic_or_print>    Formatter
@@ -25,14 +26,14 @@ python $BUILD_DIR/static/tools/disseminate.py
 
 __author__ = "Dulip Withanage"
 
-from .debug import Debuggable, Debug
-from .globals import GV
+from debug import Debuggable, Debug
+from globals import GV
 import sys
 import os
 import inspect
-from .docopt import docopt
+from docopt import docopt
 from subprocess import Popen, PIPE
-from .settingsconfiguration import Settings
+from settingsconfiguration import Settings
 
 
 class Disseminate(Debuggable):
